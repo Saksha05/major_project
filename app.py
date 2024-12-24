@@ -5,6 +5,7 @@ import torch
 import pandas as pd
 from datetime import timedelta
 from werkzeug.utils import secure_filename
+import numpy as np
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -55,6 +56,25 @@ def upload_video():
 
     # If the request is GET, render the upload page
     return render_template('upload.html')
+
+
+@app.route('/query', methods=['POST'])
+def query_process_video():
+    color = request.form.get('color', 'white')
+
+    input_video_path = os.path.join(app.config['PROCESSED_FOLDER'], 'output_shortened.mp4')
+    query_output_video_path = os.path.join(app.config['PROCESSED_FOLDER'], 'query_based_output.mp4')
+
+    query_based(input_video_path, query_output_video_path, color=color)
+
+    # Check if the file exists before rendering the template
+    if not os.path.exists(query_output_video_path):
+        return "Query-based output video could not be created.", 500
+
+    # Render the download page for query-based output
+    return render_template('query_download.html', query_video_link='query_based_output.mp4')
+
+
 
 
 # Video processing function (frame extraction, timestamping, and shortening)
@@ -136,10 +156,71 @@ def process_video(input_video_path, output_video_path, dataset_path):
     cap.release()
     out.release()
 
-# Route to download the processed video
+
+def query_based(input_video_path, output_video_path, color='white'):
+        # Create VideoCapture object and get video properties
+    cap = cv2.VideoCapture(input_video_path)
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    # Define VideoWriter object
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+
+    # Define solid color ranges in HSV
+    color_ranges = {
+        'white': (np.array([0, 0, 200], dtype=np.uint8), np.array([180, 30, 255], dtype=np.uint8)),
+        'red': (np.array([0, 50, 50], dtype=np.uint8), np.array([10, 255, 255], dtype=np.uint8)),
+        'blue': (np.array([110, 50, 50], dtype=np.uint8), np.array([130, 255, 255], dtype=np.uint8)),
+        'green': (np.array([50, 50, 50], dtype=np.uint8), np.array([70, 255, 255], dtype=np.uint8)),
+        # Add more colors if needed
+    }
+
+    # Query parameters (modify these for your query)
+    query_object = 'person'  # Object type: 'person', 'car', 'bicycle', etc.
+    query_color = 'white'    # Target color: 'white', 'red', 'blue', etc.
+
+    def is_color_present(frame, box, color_range):
+        """Check if the specified color is present in the region of interest."""
+        x1, y1, x2, y2 = map(int, box)
+        roi = frame[y1:y2, x1:x2]  # Region of interest (bounding box)
+
+        # Convert ROI to HSV for color detection
+        hsv_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv_roi, color_range[0], color_range[1])
+
+        # Check if the target color occupies a significant portion
+        white_pixels = cv2.countNonZero(mask)
+        total_pixels = roi.shape[0] * roi.shape[1]
+
+        return white_pixels / total_pixels > 0.2  # Match if >20% of the area is target color
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        # Perform object detection
+        results = model(frame)
+
+        # Filter detections based on query object type and color
+        for *box, conf, cls in results.xyxy[0]:
+            if model.names[int(cls)] == query_object:  # Check if object type matches
+                if query_color in color_ranges and is_color_present(frame, box, color_ranges[query_color]):
+                    out.write(frame)  # Write frame to output video
+                    break  # Process only the first match in the frame
+
+    # Release video objects
+    cap.release()
+    out.release()
+
+
 @app.route('/download/<filename>')
 def download_file(filename):
     return send_from_directory(app.config['PROCESSED_FOLDER'], filename)
+
+
 
 if __name__ == '__main__':
     # Ensure necessary directories exist

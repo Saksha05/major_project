@@ -34,6 +34,22 @@
                 </div>
             </div>
         </form>
+
+
+        <form action="/query" method="post" class="mt-4">
+            <div class="mb-3">
+                <label for="color" class="form-label">Select Object Color (Optional):</label>
+                <select id="color" name="color" class="form-control">
+                    <option value="white" selected>White</option>
+                    <option value="red">Red</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                </select>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-secondary w-100">Do Query</button>
+            </div>
+        </form>
     </div>
 
     <script>
