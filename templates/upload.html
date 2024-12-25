@@ -6,35 +6,139 @@
     <title>Upload Video</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Tech Theme Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            background: #121212;
+            color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
+
         .container {
             max-width: 600px;
+            margin: 100px auto;
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00d1b2;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .form-label {
+            color: #dcdcdc;
+            font-weight: bold;
+        }
+
+        .btn {
+            background: linear-gradient(to right, #00d1b2, #0062cc);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 18px;
+            text-transform: uppercase;
+            border-radius: 5px;
+            transition: background 0.3s ease-in-out, transform 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to right, #0062cc, #00b8a9);
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
         .spinner-border {
             display: none;
             margin: auto;
+            margin-top: 20px;
+        }
+
+        select.form-control {
+            background-color: #2c2f38;
+            color: #dcdcdc;
+            border: 1px solid #0062cc;
+            font-size: 1.1rem;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        select.form-control option {
+            background-color: #2c2f38;
+            color: #dcdcdc;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: #dcdcdc;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #00d1b2;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Adding some animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .content {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Background Gradient for the body */
+        .gradient-bg {
+            background: linear-gradient(45deg, #00d1b2, #0062cc);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
-    <div class="container py-5">
-        <h1 class="text-center mb-4">Upload Your Video</h1>
+
+    <!-- Background Gradient -->
+    <div class="gradient-bg"></div>
+
+    <div class="container content">
+        <h1>Upload Your Video</h1>
         <form action="/upload" method="post" enctype="multipart/form-data" onsubmit="handleUpload(event)">
             <div class="mb-3">
                 <label for="file" class="form-label">Select video to upload:</label>
                 <input type="file" id="file" class="form-control" name="file" accept="video/*" required>
             </div>
             <div class="text-center">
-                <button type="submit" class="btn btn-primary w-100">Upload Video</button>
+                <button type="submit" class="btn">Upload Video</button>
                 <div class="spinner-border text-primary mt-3" role="status" id="loadingSpinner">
                     <span class="visually-hidden">Uploading...</span>
                 </div>
             </div>
         </form>
-
 
         <form action="/query" method="post" class="mt-4">
             <div class="mb-3">
@@ -44,12 +148,17 @@
                     <option value="red">Red</option>
                     <option value="blue">Blue</option>
                     <option value="green">Green</option>
+                    <option value="black">Black</option>
                 </select>
             </div>
             <div class="text-center">
-                <button type="submit" class="btn btn-secondary w-100">Do Query</button>
+                <button type="submit" class="btn btn-secondary">Do Query</button>
             </div>
         </form>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Video Processing | All rights reserved</p>
     </div>
 
     <script>

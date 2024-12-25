@@ -1,12 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Query-Based Output</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom Tech Theme Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #121212;
+            color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 100px auto;
+            text-align: center;
+            background: #1e1e1e;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #00d1b2;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #dcdcdc;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(to right, #00d1b2, #0062cc);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 18px;
+            text-transform: uppercase;
+            border-radius: 5px;
+            transition: background 0.3s ease-in-out, transform 0.3s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to right, #0062cc, #00b8a9);
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            color: #dcdcdc;
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: #00d1b2;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Adding some animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .content {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Background Gradient for the body */
+        .gradient-bg {
+            background: linear-gradient(45deg, #00d1b2, #0062cc);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+    </style>
 </head>
 <body>
-    <a href="/download/query_based_output.mp4" download="query_based_output.mp4" class="btn btn-success">
-        Download Query-Based Video
-    </a>
-    
+
+    <!-- Background Gradient -->
+    <div class="gradient-bg"></div>
+
+    <div class="container content">
+        <h1>Query-Based Output</h1>
+        <p>Click the button below to download your query-based video. A faster and more efficient video summarization at your fingertips!</p>
+        
+        <a href="/download/query_based_output.mp4" download="query_based_output.mp4" class="btn">
+            Download Query-Based Video
+        </a>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Video Synopsis | All rights reserved</p>
+    </div>
+
 </body>
 </html>
